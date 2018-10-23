@@ -7,9 +7,8 @@ public class SuperParkingBoy extends ParkingBoy {
     public SuperParkingBoy(ParkLot... parkLot) {
         super(parkLot);
     }
-
     @Override
-    public ParkTicket park(Car car) {
+    protected ParkLot findParkLotToPark(){
         if (allParkLotsIsFull()){
             throw new IndexOutOfBoundsException("SuperParkingBoy的停车场满了！");
         }
@@ -19,6 +18,6 @@ public class SuperParkingBoy extends ParkingBoy {
                 largestVacancyParkLot = parkLot;
             }
         }
-        return largestVacancyParkLot.park(car);
+        return largestVacancyParkLot;
     }
 }

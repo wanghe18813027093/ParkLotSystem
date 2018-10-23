@@ -64,14 +64,14 @@ public class ParkingManagerTest {
         //given
         ParkLot parkLot1 = new ParkLot(1);
         ParkLot parkLot2 = new ParkLot(1);
-        ParkingManager parkingManage = new ParkingManager(parkLot1, parkLot2);
+        ParkingManager parkingManager = new ParkingManager(parkLot1, parkLot2);
 
         //when
         Car car = new Car();
-        ParkTicket ticket = parkingManage.park(car);
+        ParkTicket ticket = parkingManager.park(car);
 
         //then
-        assertThat(parkingManage.pickup(ticket)).isEqualTo(car);
+        assertThat(parkingManager.pickup(ticket)).isEqualTo(car);
 
     }
 
@@ -149,33 +149,6 @@ public class ParkingManagerTest {
         assertThat(superParkingBoyParkLot1.getParkLotSize()).isEqualTo(1);
         assertTrue(superParkingBoyParkLot2.isFull());
         assertFalse(parkingManagerParkLot.isFull());
-
-    }
-
-    @Test
-    public void should_get_a_report_table() {
-        //given
-        ParkLot parkingBoyParkLot1 = new ParkLot(3);
-        ParkLot parkingBoyParkLot2 = new ParkLot(2);
-        SuperParkingBoy superParkingBoy = new SuperParkingBoy(parkingBoyParkLot1, parkingBoyParkLot2);
-        ParkLot smartParkingBoyParkLot = new ParkLot(5);
-        SmartParkingBoy smartParkingBoy = new SmartParkingBoy(smartParkingBoyParkLot);
-        ParkLot parkingManagerParkLot = new ParkLot(10);
-        ParkingManager parkingManager = new ParkingManager(parkingManagerParkLot);
-        parkingManager.addBoy("superParkingBoy", superParkingBoy);
-        parkingManager.addBoy("smartParkingBoy", smartParkingBoy);
-
-        //when
-        ParkTicket ticket = superParkingBoy.park(new Car());
-        superParkingBoy.park(new Car());
-        superParkingBoy.pickup(ticket);
-        smartParkingBoy.park(new Car());
-        smartParkingBoy.park(new Car());
-        parkingManager.park(new Car());
-        parkingManager.park(new Car());
-
-        //then
-        parkingManager.reportToDirector();
 
     }
 }

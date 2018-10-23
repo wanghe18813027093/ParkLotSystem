@@ -6,22 +6,26 @@ import java.util.List;
  * parkingBoy按照顺序存车
  */
 public class ParkingBoy {
-    List<ParkLot> parkLots;
+    protected List<ParkLot> parkLots;
 
-    public ParkingBoy(ParkLot... parkLot) {
-        this.parkLots = Arrays.asList(parkLot);
+    public ParkingBoy(ParkLot... parkLots) {
+        this.parkLots = Arrays.asList(parkLots);
     }
 
-    public ParkTicket park(Car car) {
+    protected ParkTicket park(Car car) {
+        return findParkLotToPark().park(car);
+    }
+
+    protected ParkLot findParkLotToPark(){
         for (ParkLot parkLot : parkLots) {
             if (!parkLot.isFull()) {
-                return parkLot.park(car);
+                return parkLot;
             }
         }
         throw new IndexOutOfBoundsException("ParkingBoy的停车场满了！");
     }
 
-    public Car pickup(ParkTicket ticket) {
+    protected Car pickup(ParkTicket ticket) {
         for (ParkLot parkLot : parkLots) {
             Car car = parkLot.pickup(ticket);
             if (car != null) {
@@ -31,7 +35,7 @@ public class ParkingBoy {
         throw new IndexOutOfBoundsException("ticket无效！");
     }
 
-    public boolean allParkLotsIsFull() {
+    protected boolean allParkLotsIsFull() {
         for (ParkLot parkLot : parkLots) {
             if (!parkLot.isFull()) {
                 return false;
@@ -40,7 +44,7 @@ public class ParkingBoy {
         return true;
     }
 
-    public int getParkedCarNumber() {
+    protected int getParkedCarNumber() {
         int parkLotsCarNumber = 0;
         for (ParkLot parkLot : parkLots) {
             parkLotsCarNumber += parkLot.getParkLotSize();
@@ -49,7 +53,7 @@ public class ParkingBoy {
 
     }
 
-    public int getParkLotsCapacity() {
+    protected int getParkLotsCapacity() {
         int parkLotsCapacity = 0;
         for (ParkLot parkLot : parkLots) {
             parkLotsCapacity += parkLot.getParkLotCapacity();
@@ -57,10 +61,11 @@ public class ParkingBoy {
         return parkLotsCapacity;
     }
 
-    public void printParkPlotsCondition() {
-        System.out.print(" B " + getParkedCarNumber() + " " + getParkLotsCapacity() + "\n");
+    //每个boy都在ParkingReport中填写自己的停车情况
+    protected void fillParkingReport(ParkingReport parkingReport) {
+        parkingReport.getReportContent().append(" B " + getParkedCarNumber() + " " + getParkLotsCapacity() + "\n");
         for (ParkLot parkLot : parkLots) {
-            System.out.print("   P " + parkLot.getParkLotSize() + " " + parkLot.getParkLotCapacity() + "\n");
+            parkingReport.getReportContent().append("   P " + parkLot.getParkLotSize() + " " + parkLot.getParkLotCapacity() + "\n");
         }
     }
 }

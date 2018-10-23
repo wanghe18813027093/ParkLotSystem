@@ -1,20 +1,17 @@
 package park;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
-public class ParkingManager extends ParkingBoy {
+public class ParkingManager {
     private final Map<String, ParkingBoy> parkingBoyNameMap;
-
+    private List<ParkLot> parkLots;
     public ParkingManager(ParkLot... parkLots) {
-        super(parkLots);
+        this.parkLots = Arrays.asList(parkLots);
         parkingBoyNameMap = new HashMap<String, ParkingBoy>();
     }
 
     //需求没有要求，假设ParkingManager的存车策略和ParkingBoy相同
-    @Override
-    public ParkTicket park(Car car) {
+    protected ParkTicket park(Car car) {
         for (ParkLot parkLot : parkLots) {
             if (!parkLot.isFull()) {
                 return parkLot.park(car);
@@ -22,16 +19,25 @@ public class ParkingManager extends ParkingBoy {
         }
         throw new IndexOutOfBoundsException("ParkingManager的停车场满了！");
     }
+    protected Car pickup(ParkTicket ticket) {
+        for (ParkLot parkLot : parkLots) {
+            Car car = parkLot.pickup(ticket);
+            if (car != null) {
+                return car;
+            }
+        }
+        throw new IndexOutOfBoundsException("ticket无效！");
+    }
 
-    public void addBoy(String boyName, ParkingBoy parkingBoy) {
+    protected void addBoy(String boyName, ParkingBoy parkingBoy) {
         parkingBoyNameMap.put(boyName, parkingBoy);
     }
 
-    public ParkTicket orderBoyToPark(String name, Car car) {
+    protected ParkTicket orderBoyToPark(String name, Car car) {
         return parkingBoyNameMap.get(name).park(car);
     }
 
-    public int getParkedCarNumberSum() {
+    private int getParkedCarNumberSum() {
         int parkedCarNumberSum = getParkedCarNumber();
         Iterator iterator = parkingBoyNameMap.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -41,8 +47,15 @@ public class ParkingManager extends ParkingBoy {
         }
         return parkedCarNumberSum;
     }
+    private int getParkedCarNumber() {
+        int parkLotsCarNumber = 0;
+        for (ParkLot parkLot : parkLots) {
+            parkLotsCarNumber += parkLot.getParkLotSize();
+        }
+        return parkLotsCarNumber;
 
-    public int getParkLotsCapacitySum() {
+    }
+    private int getParkLotsCapacitySum() {
         int parkLotsCapacitySum = getParkLotsCapacity();
         Iterator iterator = parkingBoyNameMap.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -52,22 +65,28 @@ public class ParkingManager extends ParkingBoy {
         }
         return parkLotsCapacitySum;
     }
-
-    @Override
-    public void printParkPlotsCondition() {
-        System.out.print("M " + getParkedCarNumberSum() + " " + getParkLotsCapacitySum() + "\n");
+    private int getParkLotsCapacity() {
+        int parkLotsCapacity = 0;
         for (ParkLot parkLot : parkLots) {
-            System.out.print(" P " + parkLot.getParkLotSize() + " " + parkLot.getParkLotCapacity() + "\n");
+            parkLotsCapacity += parkLot.getParkLotCapacity();
+        }
+        return parkLotsCapacity;
+    }
+    private void fillParkingReport(ParkingReport parkingReport) {
+        parkingReport.getReportContent().append("M " + getParkedCarNumberSum() + " " + getParkLotsCapacitySum() + "\n");
+        for (ParkLot parkLot : parkLots) {
+            parkingReport.getReportContent().append(" P " + parkLot.getParkLotSize() + " " + parkLot.getParkLotCapacity() + "\n");
         }
     }
-
-    public void reportToDirector(){
-        printParkPlotsCondition();
+    protected ParkingReport reportToDirector(){
+        ParkingReport parkingReport = new ParkingReport();
+        fillParkingReport(parkingReport);
         Iterator iterator = parkingBoyNameMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry entry = (Map.Entry) iterator.next();
             ParkingBoy boy = (ParkingBoy) entry.getValue();
-            boy.printParkPlotsCondition();
+            boy.fillParkingReport(parkingReport);
         }
+        return parkingReport;
     }
 }
