@@ -11,14 +11,29 @@ public class SmartParkingBoyTest {
     @Test
     public void should_park_into_largest_room_parkingLot() {
         //given
-        ParkLot parkLot1 = new ParkLot(2);
-        ParkLot parkLot2 = new ParkLot(1);
+        ParkLot parkLot1 = new ParkLot(1);
+        ParkLot parkLot2 = new ParkLot(2);
         SmartParkingBoy boy = new SmartParkingBoy(parkLot1, parkLot2);
 
         //when
         boy.park(new Car());
 
         //then
+        assertThat(parkLot2.getParkLotSize()).isEqualTo(1);
+    }
+    @Test
+    public void should_park_in_order_when_room_is_same(){
+        //given
+        ParkLot parkLot1 = new ParkLot(1);
+        ParkLot parkLot2 = new ParkLot(2);
+        SmartParkingBoy boy = new SmartParkingBoy(parkLot1, parkLot2);
+
+        //when
+        boy.park(new Car());
+        boy.park(new Car());
+
+        //then
+        assertThat(parkLot2.getParkLotSize()).isEqualTo(1);
         assertThat(parkLot1.getParkLotSize()).isEqualTo(1);
     }
 

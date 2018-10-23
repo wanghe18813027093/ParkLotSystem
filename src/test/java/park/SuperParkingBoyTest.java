@@ -18,17 +18,29 @@ public class SuperParkingBoyTest extends ParkingBoy {
 
         //when
         ParkTicket ticket1 = superParkingBoy.park(car1);
-
-        //then
-        assertThat(parkLot1.getParkLotSize()).isEqualTo(1);
-        assertThat(parkLot2.getParkLotSize()).isEqualTo(0);
-
-        //when
         ParkTicket ticket2 = superParkingBoy.park(car2);
 
         //then
         assertThat(parkLot1.getParkLotSize()).isEqualTo(1);
         assertThat(parkLot2.getParkLotSize()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void should_park_in_order_when_vacancy_rate_is_same(){
+        //given
+        ParkLot parkLot1 = new ParkLot(3);
+        ParkLot parkLot2 = new ParkLot(1);
+        SuperParkingBoy superParkingBoy = new SuperParkingBoy(parkLot1, parkLot2);
+        Car car1 = new Car();
+        Car car2 = new Car();
+
+        //when
+        ParkTicket ticket1 = superParkingBoy.park(car1);
+
+        //then
+        assertThat(parkLot1.getParkLotSize()).isEqualTo(1);
+        assertThat(parkLot2.getParkLotSize()).isEqualTo(0);
 
     }
 

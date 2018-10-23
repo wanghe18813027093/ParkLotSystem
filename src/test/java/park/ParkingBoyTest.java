@@ -41,6 +41,25 @@ public class ParkingBoyTest {
     }
 
     @Test
+    public void should_park_into_first_parkingLot_when_pick_a_car_from_first_parkingLot(){
+        //given
+        ParkLot parkLot1 = new ParkLot(1);
+        ParkLot parkLot2 = new ParkLot(2);
+
+        ParkingBoy parkingBoy = new ParkingBoy(parkLot1, parkLot2);
+
+        //when
+        ParkTicket ticket1 = parkingBoy.park(new Car());
+        ParkTicket ticket2 = parkingBoy.park(new Car());
+        parkingBoy.pickup(ticket1);
+        ParkTicket ticket3 = parkingBoy.park(new Car());
+
+        //then
+        assertTrue(parkLot1.isFull());
+        assertFalse(parkLot2.isFull());
+    }
+
+    @Test
     public void should_throw_exception_when_parkingLots_is_full() {
         //given
         ParkLot parkLot1 = new ParkLot(1);
